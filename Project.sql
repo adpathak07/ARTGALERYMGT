@@ -96,6 +96,10 @@ EXEC ADD_CUSTOMER_DIRECTORY('C106','ABHISHEK','SINGH','5-DEC-1992','INDIA','9939
 EXEC ADD_CUSTOMER_DIRECTORY('C107','TOM','HOUTUM','10-Oct-1963','SPAIN','681881249');
 
 
+--Table View
+
+Select * from Customer_Directory;
+
 
 
 
@@ -143,6 +147,12 @@ EXEC ADD_GALLERY('G104','LOSANGELES Gallery','MALIBU');
 
 
 
+--Table View
+
+Select * from Gallery;
+
+
+
 
 
 
@@ -179,6 +189,11 @@ EXEC ADD_CUSTOMER('C104','G100');
 EXEC ADD_CUSTOMER('C105','G103');
 EXEC ADD_CUSTOMER('C106','G100');
 EXEC ADD_CUSTOMER('C107','G102');
+
+
+--Table View
+
+Select * from Customer;
 
 
 
@@ -232,7 +247,12 @@ EXEC ADD_EXHIBITION ('E103','G103','12-Oct-2023','28-Nov-2023');
 EXEC ADD_EXHIBITION ('E104','G103','14-Dec-2023','27-Jan-2024');
 
 
---Functio to find the number of date exhibition held
+--Table View
+
+Select * from Exhibition;
+
+
+--Function to find the number of date exhibition held
 create or replace function Event_opened_for_days(pi_eid varchar) return number
 AS
 v_left_days number;
@@ -249,6 +269,9 @@ exception
 end;
 /
 select Exhibition.*,event_opened_for_days(eid)||' Days' as No_Of_Days_Event_Is_Open from Exhibition;
+
+
+
 
 
 
@@ -288,6 +311,11 @@ EXEC ADD_ARTIST('A102','G101','C102','MANUEL','GREEN','AUSTRALIA');
 EXEC ADD_ARTIST('A103','G101','C103','GERAD','GAVI','AUSTRALIA');
 EXEC ADD_ARTIST('A104','G102','C104','ROBERT','TAYLOR','DENMARK');
 EXEC ADD_ARTIST('A105','G100','C101','ROBERT','TAYLOR','DENMARK');
+
+
+--Table View
+
+Select * from Artist;
 
 
 
@@ -339,6 +367,9 @@ EXEC ADD_ARTWORK('AR107','IMAGINE OF DAWN','2003','MODERN ART',3120,null,'G104',
 EXEC ADD_ARTWORK('AR108','DUSK OF DAWN','2009','SCULPTURES',3200,null,'G104','A105');
 
 
+--Table View
+
+Select * from Artwork;
 
 
 
@@ -362,6 +393,7 @@ EXEC ADD_ARTWORK('AR108','DUSK OF DAWN','2009','SCULPTURES',3200,null,'G104','A1
        );
 
 
+
 --PROCEDURE OF ORDERS TO INSERT THE RECORDS
 CREATE OR REPLACE PROCEDURE ADD_ORDERS(PI_ORDER_ID VARCHAR,PI_ORDER_DATE VARCHAR,PI_SHIPPED_DATE VARCHAR,
 PI_SHIP_NAME VARCHAR,PI_SHIP_ADDRESS VARCHAR,PI_SHIP_CITY VARCHAR,PI_SHIP_COUNTRY VARCHAR,PI_SHIP_ZIPCODE VARCHAR,
@@ -379,17 +411,59 @@ END ADD_ORDERS;
 /
 
 
+CREATE OR REPLACE TRIGGER before_insert_orders
+BEFORE INSERT ON Orders
+FOR EACH ROW
+BEGIN
+    :NEW.shipped_date := TO_DATE(:NEW.shipped_date, 'DD-MON-YY');
+    :NEW.order_date := TO_DATE(:NEW.order_date, 'DD-MON-YY');
+END;
+/
+
+
+
+
 --INSERT ORDER
-EXEC ADD_ORDERS('O100','9/6/2023','13/6/2023','FEDX','CATALONIA','SPAIN','BARCELONA','80011','C100','AR100');
-EXEC ADD_ORDERS('O101','11/8/2023','15/8/2023','FEDX','CATALONIA','SPAIN','BARCELONA','80011','C100','AR101');
-EXEC ADD_ORDERS('O102','14/7/2023','18/7/2023','PL LOGISTICS','AL AJBAN','UK','LONDON','53330','C102','AR101');
-EXEC ADD_ORDERS('O103','18/9/2023','22/9/2023','PL LOGISTICS','AL AJBAN','UK','LONDON','53330','C102','AR103');
-EXEC ADD_ORDERS('O104','21/10/2023','26/10/2023','GENERAL LOGISTICS','BAOURE','FRANCE','PARIS','70123','C102','AR100');
-EXEC ADD_ORDERS('O105','4/11/2023','7/11/2023','PL LOGISTICS','Savar Upazila','DHAKA','BANGLADESH','81023','C103','AR101');
-EXEC ADD_ORDERS('O106','5/7/2023','9/7/2023','FEDX','CENTRO','MADRID','SPAIN','32187','C100','AR100');
-EXEC ADD_ORDERS('O107','6/8/2023','9/8/2023','UPS','HALTON','LIVERPOOL','UK','82721','C101','AR103');
-EXEC ADD_ORDERS('O108','4/8/2023','6/8/2023','UPS','HALTON','LIVERPOOL','UK','82721','C101','AR101');
-EXEC ADD_ORDERS('O109','2/11/2023','5/11/2023','GENERAL LOGISTICS','BAOURE','FRANCE','PARIS','70123','C102','AR101');
+EXEC ADD_ORDERS('O100','6-Sep-2023','13-sep-2023','FEDX','CATALONIA','SPAIN','BARCELONA','80011','C100','AR100');
+EXEC ADD_ORDERS('O101','11-Aug-2023','15-Aug-2023','FEDX','CATALONIA','SPAIN','BARCELONA','80011','C100','AR101');
+EXEC ADD_ORDERS('O102','14-Jul-2023','18-Jul-2023','PL LOGISTICS','AL AJBAN','UK','LONDON','53330','C102','AR101');
+EXEC ADD_ORDERS('O103','18-Sep-2023','22-Sep-2023','PL LOGISTICS','AL AJBAN','UK','LONDON','53330','C102','AR103');
+EXEC ADD_ORDERS('O104','21-Oct-2023','26-Oct-2023','GENERAL LOGISTICS','BAOURE','FRANCE','PARIS','70123','C102','AR100');
+EXEC ADD_ORDERS('O105','11-Apr-2023','11-Jul-2023','PL LOGISTICS','Savar Upazila','Lahore','Pakistan','81023','C103','AR101');
+EXEC ADD_ORDERS('O106','5-Jul-2023','9-Jul-2023','FEDX','CENTRO','MADRID','SPAIN','32187','C100','AR100');
+EXEC ADD_ORDERS('O107','6-Aug-2023','9-Aug-2023','UPS','HALTON','LIVERPOOL','UK','82721','C101','AR103');
+EXEC ADD_ORDERS('O108','4-Aug-2023','6-Aug-2023','UPS','HALTON','LIVERPOOL','UK','82721','C101','AR101');
+EXEC ADD_ORDERS('O109','2-Nov-2023','5-Nov-2023','GENERAL LOGISTICS','BAOURE','FRANCE','PARIS','70123','C102','AR101');
+
+
+--Table View
+
+Select * from Orders;
+
+
+
+--Function for How many days the order get delivered
+create or replace function Days_to_get_Shipped(pi_order_id varchar) return number
+AS
+v_total_days number;
+begin
+    select shipped_date-order_date into v_total_days
+    from Orders
+    where order_id = pi_order_id;
+    return v_total_days;
+exception
+    when no_data_found then
+    return -1;
+    when others then
+    return -99;
+end;
+/
+
+select orders.*,Days_to_get_Shipped(order_id)||' Days' as No_Of_Days_that_order_get_delivered from Orders;
+
+
+
+
 
 
 
@@ -495,3 +569,23 @@ FETCH FIRST 3 ROWS ONLY
 ;
 
 select * from TOP_3_CUSTOMER_SPENDING;
+
+
+--7 HIGHEST SALE PER MONTH
+
+CREATE OR REPLACE VIEW HIGHEST_SALE_PER_MONTH AS
+SELECT
+    TO_CHAR(TO_DATE(o.order_date, 'DD-MM-YYYY'), 'Month') AS MONTH,
+    SUM(art.price) AS total_sale
+FROM
+    Orders o
+JOIN
+    artwork art ON o.artid = art.artid
+GROUP BY
+    TO_CHAR(TO_DATE(o.order_date, 'DD-MM-YYYY'), 'Month')
+ORDER BY
+    TO_DATE('01-' || TO_CHAR(TO_DATE(o.order_date, 'DD-MM-YYYY'), 'Month'), 'DD-MON');
+
+
+select * from HIGHEST_SALE_PER_MONTH;
+
