@@ -211,6 +211,19 @@ END ADD_EXHIBITION;
 /
 
 
+--Trigger
+CREATE OR REPLACE TRIGGER UPDATE_DATES_TRIGGER
+BEFORE INSERT ON EXHIBITION
+FOR EACH ROW
+BEGIN
+    :NEW.STARTDATE := TO_DATE(:NEW.STARTDATE, 'DD-MON-YY');
+    :NEW.ENDDATE := TO_DATE(:NEW.ENDDATE, 'DD-MON-YY');
+END;
+/
+
+
+
+
 --INSERT EXHIBITION
 EXEC ADD_EXHIBITION ('E100','G100','08-Nov-23','23-Nov-2023');
 EXEC ADD_EXHIBITION ('E101','G101','15-Nov-23','31-Dec-2023');
@@ -219,8 +232,23 @@ EXEC ADD_EXHIBITION ('E103','G103','12-Oct-2023','28-Nov-2023');
 EXEC ADD_EXHIBITION ('E104','G103','14-Dec-2023','27-Jan-2024');
 
 
-
-
+--Functio to find the number of date exhibition held
+create or replace function Event_opened_for_days(pi_eid varchar) return number
+AS
+v_left_days number;
+begin
+    select enddate-startdate into v_left_days
+    from Exhibition
+    where eid = pi_eid;
+    return v_left_days;
+exception
+    when no_data_found then
+    return 0;
+    when others then
+    return -1;
+end;
+/
+select Exhibition.*,event_opened_for_days(eid)||' Days' as No_Of_Days_Event_Is_Open from Exhibition;
 
 
 
