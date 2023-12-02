@@ -492,8 +492,10 @@ select orders.*,Days_to_get_Shipped(order_id)||' Days' as No_Of_Days_that_order_
 
 create or replace view Total_Orders_Per_Customer
 as
-select custid,count(order_id) total_orders from orders group by custid 
-ORDER BY CUSTID;
+select o.custid,c.fname,c.lname,count(o.order_id) total_orders from orders o
+join customer_directory c on o.custid=c.custid
+group by o.custid,c.fname,c.lname 
+ORDER BY o.CUSTID;
 
 SELECT * FROM TOTAL_ORDERS_PER_CUSTOMER; 
 
