@@ -1,9 +1,21 @@
 /*************************************************    User Creation and Grants   ************************************************  */
 
 
-create user ARTGALLERYMGT identified by Artgallerymgt123#;
+BEGIN
+    EXECUTE IMMEDIATE 'DROP USER Gallry_Admin CASCADE';
+    DBMS_OUTPUT.PUT_LINE('User dropped successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END drop_user_proc;
+/
 
-GRANT CONNECT,RESOURCE,CREATE VIEW TO ARTGALLERYMGT;
+create user Gallry_Admin identified by Artgallerymgt123#;
+GRANT CONNECT,RESOURCE,CREATE VIEW,CREATE TRIGGER TO Gallry_Admin;
+ALTER USER Gallry_Admin quota 100M on Users;
+
+
+
 
 
 
